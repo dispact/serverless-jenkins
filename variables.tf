@@ -12,12 +12,10 @@ variable "vpc_cidr_block" {
 
 variable "public_subnets" {
    description = "The number of public subnets"
-   default = "1"
 }
 
 variable "private_subnets" {
    description = "The number of private subnets"
-   default = "1"
 }
 
 variable "public_subnet_blocks" {
