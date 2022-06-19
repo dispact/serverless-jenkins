@@ -15,6 +15,10 @@ terraform {
 provider "aws" {
    region   = var.region
    profile  = var.aws_profile
+   
+   endpoints {
+      sts = "https://sts.${var.region}.amazonaws.com"
+   }
 }
 
 # The VPC module
