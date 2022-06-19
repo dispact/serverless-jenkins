@@ -1,0 +1,42 @@
+[
+   {
+      "name": "${name}",
+      "image": "${image}:latest",
+      "cpu": ${cpu},
+      "memory": ${memory},
+      "essential": true,
+      "portMappings": [
+         {
+            "containerPort": ${jenkins_controller_port},
+            "hostPort": ${jenkins_controller_port}
+         },
+         {
+            "containerPort": ${jenkins_agent_port},
+            "hostPort": ${jenkins_agent_port}
+         }
+      ],
+      "mountPoints": [{
+         "containerPath": "${containerPath}",
+         "sourceVolume": "${efsVolumeName}"
+      }],
+      "volumes": [{
+         "name": "${efsVolumeName}",
+         "efsVolumeConfiguration": {
+            "fileSystemId": "${efsVolumeId}",
+            "transmitEncryption": ${transmitEncryption}
+         }
+      }],
+      "logConfiguration": {
+         "logDriver": "awslogs",
+         "options": {
+            "awslogs-group": "${log_group}",
+            "awslogs-region": "${region}",
+            "awslogs-stream-prefix": "${log_stream}"
+         }
+      },
+      "environment": [{
+         "name": "JAVA_OPTS",
+         "value": "-Djenkins.install.runSetupWizard=false"
+      }]
+   }
+]

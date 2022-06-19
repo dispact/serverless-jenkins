@@ -1,0 +1,71 @@
+jenkins:
+  systemMessage: Jenkins configured automatically
+  numExecutors: 0
+  agentProtocols:
+    - JNLP4-connect
+  slaveAgentPort: ${jenkins_agent_port}
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  remotingSecurity:
+    enabled: true
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: JENKINS_USER
+          password: JENKINS_PASS
+  clouds:
+    - ecs:
+        credentialsId: false
+        allowedOverrides: "inheritFrom,label"
+        cluster: ${ecs_agent_cluster}
+        name: jenkins-agent
+        regionName: ${region}
+        jenkinsUrl: http://${jenkins_dns}:${jenkins_controller_port}
+        tunnel: ${jenkins_dns}:${jenkins_agent_port}
+        templates:
+          - assignPublicIp: true
+            cpu: 512
+            memoryReservation: 1024
+            image: ${jenkins_agent_image}
+            label: jenkins-agent
+            launchType: FARGATE
+            networkMode: awsvpc
+            logDriver: awslogs
+            logDriverOptions:
+              - name: awslogs-group
+                value: ${log_group}
+              - name: awslogs-region
+                value: ${region}
+              - name: awslogs-stream-prefix
+                value: ${log_stream}
+            securityGroups: ${jenkins_agent_sg}
+            subnets: ${subnets}
+            templateName: jenkins-agent
+            executionRole: ${ecs_execution_role}
+jobs:
+  - script: >
+      folder('Example Jobs')
+  - script: >
+      pipelineJob('Example Jobs/Example Pipeline') {
+        definition {
+          cps {
+            script("""\
+              pipeline {
+                agent {
+                  ecs {
+                    inheritFrom "jenkins-agent"
+                  }
+                }
+                stages {
+                  stage ('Echo Hello World') {
+                    steps {
+                      echo "Hello World!"
+                    }
+                  }
+                }
+              }""".stripIndent())
+          }
+        }
+      }
