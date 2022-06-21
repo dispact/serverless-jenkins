@@ -71,6 +71,8 @@ When Terraform is done running, the **jenkins_alb_dns** output is going to be th
 After logging in, you will see that there is an example pipeline. Before this can be ran, you will need to approve the groovy script. To do so, either append /scriptApproval/ to the URL or go to Manage Jenkins > In-process Script Approval. Once on this page, hit Approve above the groovy script.
 > URL example: http://jenkins-server.com/scriptApproval/
 
+After the groovy script has been approved, you will be able to run the example pipeline. When running this pipeline, Jenkins will spin up an ECS Fargate container to run the job and once the job is complete, the container will be terminated.
+
 <p>&nbsp;</p>
 If you need to tear down the AWS infrastructure, you can run the follow command:
 
