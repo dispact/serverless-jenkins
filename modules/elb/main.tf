@@ -11,7 +11,7 @@ resource "aws_lb" "alb" {
    load_balancer_type   = "application"
    # Attaching the jenkins-alb security group
    security_groups      = [var.jenkins_alb_sg]
-   # Placing the ALB in all the private subnets
+   # Placing the ALB in all the publics subnets
    subnets              = [for subnet in var.public_subnets : subnet.id]
 
    tags = {
