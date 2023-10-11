@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.332.3-lts
+FROM jenkins/jenkins:lts-jdk11
 
 # Skip the Jenkins setup wizard
 ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"

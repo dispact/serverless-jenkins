@@ -1,1 +1,1 @@
-FROM jenkins/inbound-agent:4.10-3
+FROM jenkins/inbound-jenkins

@@ -79,3 +79,20 @@ resource "null_resource" "build_and_push_image_jenkins_agent" {
       EOF
   }
 } 
+
+
+# This is a null resource, all it does is build and push the 
+# Jenkins agent image to the Jenkins windows agent repo
+resource "null_resource" "build_and_push_image_jenkins_agent" {
+  provisioner "local-exec" {
+    command = <<EOF
+      set -ex
+      echo "--- JENKINS AGENT ---"
+      aws ecr get-login-password --region ${data.aws_region.current.name} | \
+      docker login --username AWS --password-stdin ${local.agent_repo_endpoint} && \
+      docker build -t jenkins-agent ${path.module}/../docker/jenkins_agent --platform linux/amd64 && \
+      docker tag jenkins-agent:latest ${aws_ecr_repository.jenkins_agent_repo.repository_url}:latest
+      docker push ${aws_ecr_repository.jenkins_agent_repo.repository_url}:latest
+      EOF
+  }
+} 

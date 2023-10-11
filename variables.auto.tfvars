@@ -7,7 +7,7 @@ aws_profile = "default"
 # The region we want to deploy to
 region = "us-east-2"
 # What we will prefix our Name tags with
-prefix = "jenkins-tutorial"
+prefix = "jenkins-aws"
 
 #########
 ## VPC ##

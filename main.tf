@@ -7,7 +7,7 @@ terraform {
    }
 
    # Required version of Terraform
-   required_version = "~> 1.1.5"
+   required_version = "> 1.1.5"
 }
 
 # AWS provider with region and profile set to the
