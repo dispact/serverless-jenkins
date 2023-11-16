@@ -21,3 +21,9 @@ resource "aws_cloudwatch_log_stream" "jenkins_agent_log_stream" {
    name           = "jenkins-agent"
    log_group_name = aws_cloudwatch_log_group.jenkins_logs.name
 }
+
+# This is the log stream for the Jenkins agents windows
+resource "aws_cloudwatch_log_stream" "jenkins_agent_windows_log_stream" {
+   name           = "jenkins-agent-windows"
+   log_group_name = aws_cloudwatch_log_group.jenkins_logs.name
+}

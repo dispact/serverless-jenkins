@@ -12,3 +12,8 @@ output "jenkins_agent_log_stream" {
    description = "The name of the Jenkins agent log stream"
    value = aws_cloudwatch_log_stream.jenkins_agent_log_stream.name
 }
+
+output "jenkins_agent_windows_log_stream" {
+   description = "The name of the Jenkins agent windows log stream"
+   value = aws_cloudwatch_log_stream.jenkins_agent_windows_log_stream.name
+}

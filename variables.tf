@@ -48,6 +48,11 @@ variable "jenkins_agent_port" {
    type = number
 }
 
+variable "jenkins_agent_windows_port" {
+   description = "The port of the Jenkins agents windows"
+   type = number
+}
+
 variable "prefix" {
    description = "AWS Resource Prefix"
    type = string

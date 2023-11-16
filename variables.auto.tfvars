@@ -37,3 +37,6 @@ jenkins_controller_port = 8080
 # The container port to run the Jenkins agents on
 # This will also act as the JNLP port 
 jenkins_agent_port = 50000
+# The container port to run the Jenkins agents windows on
+# This will also act as the JNLP port 
+jenkins_agent_windows_port = 50000

@@ -8,6 +8,11 @@ output "jenkins_agents" {
    value = aws_security_group.jenkins_agents.id
 }
 
+output "jenkins_agents-windows" {
+   description = "ID of the Jenkins Agent Windows SG"
+   value = aws_security_group.jenkins_agents_windows.id
+}
+
 output "jenkins_efs" {
    description = "ID of the Jenkins EFS SG"
    value = aws_security_group.jenkins_efs.id

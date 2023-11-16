@@ -45,6 +45,7 @@ module "security_groups" {
    vpc_id = module.vpc.vpc_id
    jenkins_controller_port = var.jenkins_controller_port
    jenkins_agent_port = var.jenkins_agent_port
+   jenkins_agent_windows_port = var.jenkins_agent_windows_port
 }
 
 # The ECR module
@@ -53,12 +54,16 @@ module "security_groups" {
 module "ecr" {
    source                     = "./modules/ecr"
    jenkins_agent_port         = var.jenkins_agent_port
+   jenkins_agent_windows_port = var.jenkins_agent_windows_port
    jenkins_controller_port    = var.jenkins_controller_port
    jenkins_agent_cluster      = module.ecs.jenkins_agents_cluster
    jenkins_agent_sg           = module.security_groups.jenkins_agents
+   jenkins_agent_windows_cluster      = module.ecs.jenkins_agents_windows_cluster
+   jenkins_agent_windows_sg           = module.security_groups.jenkins_agents_windows
    jenkins_dns                = module.cloud_map.jenkins_controller_dns_endpoint
    jenkins_log_group          = module.cloudwatch.jenkins_log_group
    jenkins_agent_log_stream   = module.cloudwatch.jenkins_agent_log_stream
+   jenkins_agent_windows_log_stream   = module.cloudwatch.jenkins_agent_windows_log_stream
    jenkins_execution_role     = module.iam.jenkinsExecutionRole
    private_subnets            = module.vpc.private_subnets
 }
@@ -94,6 +99,7 @@ module "ecs" {
    jenkins_controller_mem     = var.jenkins_controller_mem
    jenkins_controller_port    = var.jenkins_controller_port
    jenkins_agent_port         = var.jenkins_agent_port
+   jenkins_agent_windows_port = var.jenkins_agent_windows_port
    jenkins_repo               = module.ecr.jenkins_repo_url
    jenkins_efs                = module.efs.efs
    jenkins_efs_ap             = module.efs.efs_ap

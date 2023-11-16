@@ -1,4 +1,4 @@
-amazon-ecs:1.41
-configuration-as-code:1429.v09b_044a_c93de
+amazon-ecs:1.48
+configuration-as-code:1714.v09593e830cfa
 workflow-aggregator:581.v0c46fa_697ffd
 job-dsl:1.79

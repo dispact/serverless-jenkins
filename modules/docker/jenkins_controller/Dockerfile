@@ -12,7 +12,7 @@ ENV TEST="TEST"
 # as Code yaml file
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/jenkins.yaml
 
-# Copying over the plugins.txt, default-user.groovy 
+# Copying over the plugins.txt, default-user.groovy
 # and jenkins.yaml from our local machine
 COPY plugins.txt /usr/share/jenkins/ref/
 COPY default-user.groovy /usr/share/jenkins/ref/init.groovy.d/
@@ -25,4 +25,4 @@ RUN sed -i "s/JENKINS_USER/${JENKINS_USER}/g" /usr/share/jenkins/ref/jenkins.yam
 RUN sed -i "s/JENKINS_PASS/${JENKINS_PASS}/g" /usr/share/jenkins/ref/jenkins.yaml
 
 # Install the Jenkins plugins that are listed in plugins.txt
-RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt   
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt

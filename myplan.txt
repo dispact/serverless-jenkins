@@ -70,6 +70,15 @@ Terraform will perform the following actions:
       + name           = "jenkins-agent"
     }
 
+  # module.cloudwatch.aws_cloudwatch_log_stream.jenkins_agent_windows_log_stream will be created
+  + resource "aws_cloudwatch_log_stream" "jenkins_agent_windows_log_stream" {
+      + arn            = (known after apply)
+      + id             = (known after apply)
+      + log_group_name = "/ecs/jenkins"
+      + name           = "jenkins-agent-windows"
+    }
+
+
   # module.cloudwatch.aws_cloudwatch_log_stream.jenkins_controller_log_stream will be created
   + resource "aws_cloudwatch_log_stream" "jenkins_controller_log_stream" {
       + arn            = (known after apply)
@@ -88,6 +97,17 @@ Terraform will perform the following actions:
       + repository_url       = (known after apply)
       + tags_all             = (known after apply)
     }
+
+    # module.ecr.aws_ecr_repository.jenkins_agent_windows_repo will be created
+  + resource "aws_ecr_repository" "jenkins_agent_windows_repo" {
+      + arn                  = (known after apply)
+      + id                   = (known after apply)
+      + image_tag_mutability = "MUTABLE"
+      + name                 = "jenkins-agent-windows"
+      + registry_id          = (known after apply)
+      + repository_url       = (known after apply)
+      + tags_all             = (known after apply)
+    } 
 
   # module.ecr.aws_ecr_repository.jenkins_controller_repo will be created
   + resource "aws_ecr_repository" "jenkins_controller_repo" {
@@ -114,6 +134,11 @@ Terraform will perform the following actions:
       + id = (known after apply)
     }
 
+  # module.ecr.null_resource.build_and_push_image_jenkins_agent_windows will be created
+  + resource "null_resource" "build_and_push_image_jenkins_agent_windows" {
+      + id = (known after apply)
+    }
+
   # module.ecr.null_resource.build_and_push_image_jenkins_controller will be created
   + resource "null_resource" "build_and_push_image_jenkins_controller" {
       + id = (known after apply)
@@ -125,6 +150,15 @@ Terraform will perform the following actions:
       + capacity_providers = (known after apply)
       + id                 = (known after apply)
       + name               = "jenkins-aws-agents"
+      + tags_all           = (known after apply)
+    }
+
+  # module.ecs.aws_ecs_cluster.agents_windows will be created
+  + resource "aws_ecs_cluster" "agents-windows" {
+      + arn                = (known after apply)
+      + capacity_providers = (known after apply)
+      + id                 = (known after apply)
+      + name               = "jenkins-aws-agents-windows"
       + tags_all           = (known after apply)
     }
 
@@ -152,6 +186,21 @@ Terraform will perform the following actions:
         }
     }
 
+  # module.ecs.aws_ecs_cluster_capacity_providers.agents_windows will be created
+  + resource "aws_ecs_cluster_capacity_providers" "agents-windows" {
+      + capacity_providers = [
+          + "FARGATE_SPOT",
+        ]
+      + cluster_name       = "jenkins-aws-agents-windows"
+      + id                 = (known after apply)
+
+      + default_capacity_provider_strategy {
+          + base              = 1
+          + capacity_provider = "FARGATE_SPOT"
+          + weight            = 100
+        }
+    }
+  
   # module.ecs.aws_ecs_cluster_capacity_providers.controller will be created
   + resource "aws_ecs_cluster_capacity_providers" "controller" {
       + capacity_providers = [
@@ -500,6 +549,40 @@ Terraform will perform the following actions:
         }
       + tags_all               = {
           + "Name" = "jenkins-aws-jenkins-agents"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+    # module.security_groups.aws_security_group.jenkins_agents_windows will be created
+  + resource "aws_security_group" "jenkins_agents_windows" {
+      + arn                    = (known after apply)
+      + description            = "Security group for the Jenkins agents windows"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = "Allow all outbound traffic"
+              + from_port        = 0
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "jenkins-agents-windows"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "jenkins-aws-jenkins-agents-windows"
+        }
+      + tags_all               = {
+          + "Name" = "jenkins-aws-jenkins-agents-windows"
         }
       + vpc_id                 = (known after apply)
     }

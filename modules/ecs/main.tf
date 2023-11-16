@@ -14,6 +14,7 @@ variable "jenkins_log_stream" {}
 variable "execution_role_arn" {}
 variable "jenkins_controller_port" {}
 variable "jenkins_agent_port" {}
+variable "jenkins_agent_windows_port" {}
 variable "jenkins_controller_dns_arn" {}
 
 # This is the ECS cluster for the Jenkins controller
@@ -24,6 +25,11 @@ resource "aws_ecs_cluster" "controller" {
 # This is the ECS cluster for the Jenkins agent
 resource "aws_ecs_cluster" "agents" {
    name = "${var.prefix}-agents"
+}
+
+# This is the ECS cluster for the Jenkins agent windows
+resource "aws_ecs_cluster" "agents_windows" {
+   name = "${var.prefix}-agents-windows"
 }
 
 # ECS cluster capacity provider for the Jenkins controller cluster
@@ -38,9 +44,9 @@ resource "aws_ecs_cluster_capacity_providers" "controller" {
    }
 }
 
-# ECS cluster capacity provider for the Jenkins agent cluster
+# ECS cluster capacity provider for the Jenkins agent windows cluster
 resource "aws_ecs_cluster_capacity_providers" "agents" {
-   cluster_name = aws_ecs_cluster.agents.name
+   cluster_name = aws_ecs_cluster.agents_windows.name
    capacity_providers = ["FARGATE_SPOT"]
 
    default_capacity_provider_strategy {
@@ -70,6 +76,7 @@ resource "aws_ecs_task_definition" "jenkins_td" {
          log_stream              = var.jenkins_log_stream
          jenkins_controller_port = var.jenkins_controller_port
          jenkins_agent_port      = var.jenkins_agent_port
+         jenkins_agent_windows_port  = var.jenkins_agent_windows_port
       }
    )
    requires_compatibilities   = ["FARGATE"]

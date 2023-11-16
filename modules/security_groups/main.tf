@@ -3,6 +3,7 @@ variable "vpc_id" {}
 variable "prefix" {}
 variable "jenkins_controller_port" {}
 variable "jenkins_agent_port" {}
+variable "jenkins_agent_windows_port" {}
 
 # This is the SG for the Jenkins ALB
 # This is allowing all traffic through port 80 and
@@ -53,6 +54,27 @@ resource "aws_security_group" "jenkins_agents" {
    }
 }
 
+
+# This is the SG for the Jenkins agents windows
+# No ingress, only egress for all traffic
+resource "aws_security_group" "jenkins_agents_windows" {
+   name        = "jenkins-agents-windows"
+   description = "Security group for the Jenkins agents windows"
+   vpc_id      = var.vpc_id
+
+   egress {
+      description = "Allow all outbound traffic"
+      from_port   = "0"
+      to_port     = "0"
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+   }
+
+   tags = {
+      Name = "${var.prefix}-jenkins-agents-windows"
+   }
+}
+
 # This is the SG for the Jenkins controller
 # - Allows traffic from ALB on Jenkins controller port
 # - Allows traffic from Jenkins agents on the 
@@ -80,12 +102,28 @@ resource "aws_security_group" "jenkins_controller" {
       security_groups   = [aws_security_group.jenkins_agents.id]
    }
 
+      ingress {
+      description       = "Allow traffic from the Jenkins agents windows over JNLP"
+      from_port         = "${var.jenkins_agent_windows_port}"
+      to_port           = "${var.jenkins_agent_windows_port}"
+      protocol          = "tcp"
+      security_groups   = [aws_security_group.jenkins_agents_windows.id]
+   }
+
    ingress {
       description       = "Allow traffic from the Jenkins agents"
       from_port         = "${var.jenkins_controller_port}"
       to_port           = "${var.jenkins_controller_port}"
       protocol          = "tcp"
       security_groups   = [aws_security_group.jenkins_agents.id]
+   }
+
+   ingress {
+      description       = "Allow traffic from the Jenkins agents windows"
+      from_port         = "${var.jenkins_controller_port}"
+      to_port           = "${var.jenkins_controller_port}"
+      protocol          = "tcp"
+      security_groups   = [aws_security_group.jenkins_agents_windows.id]
    }
 
    ingress {

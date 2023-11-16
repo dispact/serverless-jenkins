@@ -86,7 +86,7 @@ resource "aws_route_table_association" "public" {
 
 # Creating an Elastic IP for the NAT Gateway
 resource "aws_eip" "nat_gateway_eip" {
-   vpc = true   
+   vpc = true
 
    tags = {
       Name = "${var.prefix}-eip"
@@ -104,7 +104,7 @@ resource "aws_nat_gateway" "nat_gateway" {
    }
 }
 
-# Creating a private route table and adding the 
+# Creating a private route table and adding the
 # NAT gateway as a route
 resource "aws_route_table" "private_rt" {
    vpc_id = aws_vpc.vpc.id
